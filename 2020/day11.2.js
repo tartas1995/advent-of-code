@@ -151,6 +151,6 @@ let interval = setInterval(() => {
         field = renderField
         printField()
     }
-}, 200)
+}, 100)
 
 //2180 is the solution 
