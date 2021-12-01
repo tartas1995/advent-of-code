@@ -19,7 +19,7 @@ for (let ii = 0; ii < numbers.length - 2; ii++) {
             console.log(`${sum} (decreased)`)
         }
     }
-    previous = sum;
+    previous = sum
 }
 
-console.log(count)//1428 too low
+console.log(count)
