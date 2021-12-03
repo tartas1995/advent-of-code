@@ -65,7 +65,7 @@ if (!fs.existsSync(dir)) {
 }
 process.chdir(dir)
 
-if (day < 1 || day > 31) {
+if (day < 1 || day > 25) {
     console.log('that is not a day of the month')
     exit()
 }
