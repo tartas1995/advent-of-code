@@ -35,13 +35,12 @@ function getPossiblePaths(pos) {
     return paths
 }
 
+function registerVisit(array, node) {
+    array[nodeToString(node)] = true
+}
+
 function findNodeInArray(array, node) {
-    for (let n of array) {
-        if (n.x === node.x && n.y === node.y) {
-            return true
-        }
-    }
-    return false
+    return array[nodeToString(node)]
 }
 
 function getShortestNode(distances, visited) {
@@ -96,7 +95,7 @@ while (node = getShortestNode(distances, visited)) {
             distances[nodeStr].via = node
         }
     }
-    visited.push(node)
+    registerVisit(visited, node)
 }
 
 let shortestPath = [distances[nodeToString(END)]]
