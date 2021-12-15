@@ -144,7 +144,7 @@ while (!!shortestPath[shortestPath.length-1].via) {
 
 shortestPath.reverse()
 
-drawMap(map,shortestPath)
+//drawMap(map,shortestPath)
 
 console.log(distances[nodeToString(END)])
 
