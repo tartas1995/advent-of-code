@@ -43,16 +43,26 @@ function findNodeInArray(array, node) {
     return array[nodeToString(node)]
 }
 
-function getShortestNode(distances, visited) {
-    let shortest = null
-    for (let key in distances) {
-        const node = distances[key]
-        if ((shortest === null || node.cost < shortest.cost )
-            && !findNodeInArray(visited,node)) {
-            shortest = node
-        }
+function registerDistanceInLookUp(node,cost) {
+    if (findNodeInArray(visited,node)) return
+    if (!qFSDT[cost]) qFSDT[cost] = []
+    qFSDT[cost].push(nodeToString(node))
+}
+
+function unregisterDistanceInLookUp(node) {
+    if (!qFSDT[node.cost]) return
+    const str = nodeToString(node)
+    qFSDT[node.cost] = qFSDT[node.cost].filter((n) => {
+        return n !== str
+    })
+}
+
+function getNextNode() {
+    while(qFSDT[currentCost] === undefined 
+        || qFSDT[currentCost].length === 0) {
+        currentCost++
     }
-    return shortest
+    return qFSDT[currentCost].shift()
 }
 
 function nodeToString(node) {
@@ -63,7 +73,11 @@ function nodeToString(node) {
 const START = { x: 0, y: 0}
 const END = { x: map[map.length - 1].length-1, y: map.length - 1}
 
-let visited = []
+let visited = {}
+let currentCost = 0
+let qFSDT = {//quickFindShortestDistanceTable
+    0: ['0,0']
+} 
 let distances = {}
 map.forEach((row, y) => {
     return row.forEach((v, x) => {
@@ -78,10 +92,10 @@ map.forEach((row, y) => {
 let lastCost = null
 
 let node = null
-while (node = getShortestNode(distances, visited)) {
+while (node = distances[getNextNode()]) {
     if (lastCost === null || lastCost < node.cost) {
         lastCost = node.cost
-        console.log(lastCost)
+        console.log("new Cost:",lastCost)
     }
     if (node.x === END.x && node.y === END.y) break;
     const cost = node.cost
@@ -91,6 +105,8 @@ while (node = getShortestNode(distances, visited)) {
         const newDis = cost+map[nn.y][nn.x]
         const nodeStr = nodeToString(nn)
         if (distances[nodeStr].cost > newDis) {
+            unregisterDistanceInLookUp(nn)
+            registerDistanceInLookUp(nn, newDis)
             distances[nodeStr].cost = newDis
             distances[nodeStr].via = node
         }
