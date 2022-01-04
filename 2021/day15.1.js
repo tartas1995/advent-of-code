@@ -1,4 +1,6 @@
 const fs = require('fs')
+const { createCanvas } = require('canvas')
+const { execSync } = require("child_process")
 const content = fs.readFileSync('./day15.txt', { encoding: 'utf8', flag: 'r' })
 const map = content.split("\n").map((line) => {
     return line.split('').map(n => parseInt(n))
@@ -69,6 +71,31 @@ function nodeToString(node) {
     return `${node.y},${node.x}`
 }
 
+// animation render
+let nbrOfFrame = 0
+const pixelSize = 2
+function resize(value) {
+    return value * pixelSize
+}
+function renderImage(node, defaultColor = "#FFFFFF") {
+    const canvas = createCanvas(resize(END.x + 1), resize(END.y + 1))
+    const context = canvas.getContext("2d")
+    context.fillStyle = "#000000"
+    context.fillRect(0, 0, resize(END.x + 1), resize(END.y + 1))
+    context.fillStyle = defaultColor
+    let nn = node
+    while (nn.via !== undefined) {
+        context.fillRect(resize(nn.x),resize(nn.y), pixelSize, pixelSize)
+        nn = nn.via
+    }
+    context.fillStyle = "#0000FF"
+    context.fillRect(0, 0,  pixelSize,  pixelSize)
+    context.fillStyle = "#FF0000"
+    context.fillRect( resize(END.x), resize(END.y),  pixelSize,  pixelSize)
+    const buffer = canvas.toBuffer("image/png")
+    fs.writeFileSync(`${process.argv[2]}${nbrOfFrame}.png`, buffer)
+    nbrOfFrame++
+}
 
 const START = { x: 0, y: 0}
 const END = { x: map[map.length - 1].length-1, y: map.length - 1}
@@ -111,7 +138,12 @@ while (node = distances[getNextNode()]) {
             distances[nodeStr].via = node
         }
     }
+    renderImage(node)
     registerVisit(visited, node)
+}
+
+for (let ii = 0; ii < 120; ii++) {
+    renderImage(distances[nodeToString(END)], "#FF0000")
 }
 
 let shortestPath = [distances[nodeToString(END)]]
@@ -123,7 +155,9 @@ while (!!shortestPath[shortestPath.length-1].via) {
 
 shortestPath.reverse()
 
-drawMap(map,shortestPath)
+//drawMap(map,shortestPath)
+execSync(`ffmpeg -y -start_number 0 -i ${process.argv[2]}%d.png -framerate 60 ${process.argv[2]}path.mp4`)
+execSync(`rm ${process.argv[2]}*.png`)
 
 console.log(distances[nodeToString(END)])
 
