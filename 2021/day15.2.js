@@ -94,25 +94,21 @@ function nodeToString(node) {
 
 // animation render
 let nbrOfFrame = 0
-const pixelSize = 2
-function resize(value) {
-    return value * pixelSize
-}
 function renderImage(node, defaultColor = "#FFFFFF") {
-    const canvas = createCanvas(resize(END.x + 1), resize(END.y + 1))
+    const canvas = createCanvas(END.x + 1, END.y + 1)
     const context = canvas.getContext("2d")
     context.fillStyle = "#000000"
-    context.fillRect(0, 0, resize(END.x + 1), resize(END.y + 1))
+    context.fillRect(0, 0, END.x + 1, END.y + 1)
     context.fillStyle = defaultColor
     let nn = node
     while (nn.via !== undefined) {
-        context.fillRect(resize(nn.x),resize(nn.y), pixelSize, pixelSize)
+        context.fillRect(nn.x,nn.y, 1, 1)
         nn = nn.via
     }
     context.fillStyle = "#0000FF"
-    context.fillRect(0, 0,  pixelSize,  pixelSize)
+    context.fillRect(0, 0,  1,  1)
     context.fillStyle = "#FF0000"
-    context.fillRect( resize(END.x), resize(END.y),  pixelSize,  pixelSize)
+    context.fillRect( END.x, END.y,  1,  1)
     const buffer = canvas.toBuffer("image/png")
     fs.writeFileSync(`${process.argv[2]}${nbrOfFrame}.png`, buffer)
     nbrOfFrame++
