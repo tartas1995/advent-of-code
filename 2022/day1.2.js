@@ -35,14 +35,13 @@ Ranking.sort((a, b) => {
     }
 })
 
-console.log(Ranking)
-
 let sumOfHighest3 = 0;
 for (let ii = 0; ii < 3; ii++) {
     sumOfHighest3 += Ranking[ii].sum;
     console.log(`Index: ${Ranking[ii].index}`)
     console.log(`Calories: ${Ranking[ii].sum}`)
     console.log(`Elf: ${elves[Ranking[ii].index]}`)
+    console.log('----------------------------------')
 }
 
 console.log(`Sum of Highest 3: ${sumOfHighest3}`)
