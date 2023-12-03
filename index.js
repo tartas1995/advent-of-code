@@ -8,10 +8,10 @@ const https = require('https')
 if (process.argv.length === 2) {
     let command = ''
     switch (process.platform) { 
-        case 'darwin' : command += 'open';
-        case 'win32' : command += 'start';
-        case 'win64' : command += 'start';
-        default : command += 'xdg-open';
+        case 'darwin' : command += 'open'; break;
+        case 'win32' : command += 'start'; break;
+        case 'win64' : command += 'start'; break;
+        default : command += 'xdg-open'; break;
     }
     command += ` https://adventofcode.com/`;
     exec(command)
@@ -27,10 +27,10 @@ if (process.argv.length < 5) {
 function openInputFile(year, day) {
     let command = ''
     switch (process.platform) { 
-        case 'darwin' : command += 'open';
-        case 'win32' : command += 'start';
-        case 'win64' : command += 'start';
-        default : command += 'xdg-open';
+        case 'darwin' : command += 'open'; break;
+        case 'win32' : command += 'start'; break;
+        case 'win64' : command += 'start'; break;
+        default : command += 'xdg-open'; break;
     }
     command += ` https://adventofcode.com/${year}/day/${day}/input`;
     exec(command)
